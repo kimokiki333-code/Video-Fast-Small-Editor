@@ -1,0 +1,19 @@
+{
+  "name": "make-it-fast-edit-arsenal",
+  "version": "3.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Full-scale black-out, installable, fully client-side video editing arsenal.",
+  "scripts": {
+    "start": "node server.mjs",
+    "preview": "node server.mjs",
+    "cap:sync": "npx cap sync",
+    "cap:add:android": "npx cap add android",
+    "cap:open:android": "npx cap open android"
+  },
+  "devDependencies": {
+    "@capacitor/android": "^7.0.0",
+    "@capacitor/cli": "^7.0.0",
+    "@capacitor/core": "^7.0.0"
+  }
+}

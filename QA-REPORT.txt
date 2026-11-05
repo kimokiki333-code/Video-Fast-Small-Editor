@@ -1,0 +1,85 @@
+Make it Fast Edit Arsenal — V3 QA REPORT
+Generated: 2026-11-05 (Africa/Cairo)
+
+EXACT DELIVERABLE
+- Document title: "Make it Fast Edit Arsenal"
+- Brand: Make it Fast Edit Arsenal
+- Theme: pure black #000000 with cyan / acid lime / magenta accents
+- Light edition: tiny 2D ember + wireframe-ring canvas, 20 fps, half resolution
+- No WebGL, no Three.js, no shaders, no blur composites, no endless animations
+- 720p HD save cap: 720 / 480 / 360 quality tiers, no source upscaling
+- Delete-able split parts, per-part edits, undo/redo, 25 fps normal-resolution preview
+- All fonts, icons, FFmpeg wrapper, core JS and gzipped WASM are local; no runtime CDN
+
+STATIC CHECKS
+- node --check: 17 JS files (including player.js and engine/ffmpeg-core.js) — all OK
+- JSON parse: 4 JSON files + manifest.webmanifest — all OK
+- CSS brace balance: styles.css + blackout.css — OK
+- Service worker precache: 30 entries, all paths exist; includes player.js
+- Local asset references checked: 30, none missing
+- Stale / external / forbidden references: none found
+- No _probe, no node_modules, no vendor/three inside the package
+- Package source: 45 files / 11837141 bytes (including QA + manifest)
+- Checksummed source files in MANIFEST.txt: 43 / 11828016 bytes
+
+V3 BROWSER CHECKS (Playwright Chromium, 1600x1000 desktop + 390x844 mobile)
+- 43 / 43 V3 functional assertions passed
+- Light preview: Canvas 2D, DPR 1, 25 fps, 704x396 at the tested stage
+- No preview redraw while paused (20 -> 20 frames in 400 ms)
+- One redraw on seek (20 -> 21); 17 frames in 600 ms during playback (~25 fps)
+- Background: Canvas 2D, 20 fps, 0.5 scale, 800x500 half-resolution canvas
+- Background stops while video plays and while the tab is hidden; resumes on pause/show
+- Computed CSS animations: brand/ticker/pulse all "none"; backdrop-filter "none"; scanlines "none"
+- Lazy filmstrip: exactly 8 generated thumbnails and 8 DOM images
+- Mobile horizontal overflow: 0px
+- Zero page errors, zero console errors, zero Three.js requests, zero external HTTP requests
+
+720P CAP / SHAPE / QUALITY (1920x1080 VP8/Opus source, real browser exports)
+- 720p HD / Original -> 1280x720 (752,844 bytes)
+- 480p / Original -> 852x480 (369,156 bytes)
+- 360p / Original -> 640x360 (223,531 bytes)
+- 720p HD / 9:16 -> 720x1280 (359,117 bytes)
+- Shape matrix at 720p: Original 1280x720, 16:9 1280x720, 9:16 720x1280,
+  1:1 720x720, 4:5 720x900, 4:3 960x720, custom 21:9 1680x720
+- 640x360 source at 720p -> 640x360 (346,635 bytes); smaller source never scaled up
+- Every exported MP4 decoded cleanly as H.264 Constrained Baseline / AAC-LC 48 kHz stereo
+
+SPLIT PARTS / DELETE / PER-PART EDITS / UNDO-REDO
+- Two cuts at 1s and 2s inside a 0.2-2.2s range produced 3 separate parts
+- Focused middle part retained an independent brightness edit; other parts had no override
+- Removing the middle part left 2 kept parts; split ZIP contained exactly 2 MP4s (42,383 bytes)
+- exportMp4 stitched only the kept 0.8s + 0.2s parts -> 1.03s H.264/AAC (40,864 bytes)
+- Undo restored the removed part; redo removed it again
+- Text add -> undo -> redo verified; history held 32 editable steps
+- Delete before cut moved trimStart to 1s; delete after cut moved trimEnd to 2s
+
+FULL 7-MODULE EXPORT SMOKE TEST (all passed, zero errors)
+- MP4 render: 69,731 bytes, 2.00s H.264/AAC, 284x160 (cropped source)
+- PNG snapshot: 13,144 bytes, 284x160
+- MP3 extract: 10,138 bytes, 44.1 kHz stereo, 2.04s
+- Animated GIF: 230,869 bytes, 480x270
+- 3x3 frame sheet: 299,695 bytes, 1480x850
+- Split ZIP: 74,227 bytes, unzip -t OK, two MP4 segments
+- MP3 + cover to MP4: 45,306 bytes, 2.00s H.264/AAC, 640x360
+- All exported MP4 / MP3 / PNG / GIF decoded cleanly with ffmpeg-static / PIL
+
+PWA / OFFLINE (root-level website deploy build on 4174)
+- Service worker cache: make-it-fast-v3.0.0-shell
+- Controlled: yes; player.js, engine/ffmpeg-core.js and ffmpeg-core.wasm.gz cached
+- Offline reload: HTTP 200, app + 2D background + light preview ready
+- Offline FIRST render: 80,443 bytes, 2.00s H.264/AAC 320x180 30 fps
+- Zero page errors, console errors, Three.js requests, external requests or failed requests
+
+PACKAGE CONTENTS
+- Complete static PWA under make-it-fast-edit-arsenal/
+- START-HERE.txt, README.md, LICENSES.md, QA-REPORT.txt, MANIFEST.txt
+- server.mjs (0.0.0.0:4173), package.json (3.0.0), sw.js (v3.0.0), manifest.webmanifest
+- player.js, background.js, app.js, ffmpeg-plan.js, engine.js, media-utils.js, zip.js
+- capacitor.config.json, _headers, vercel.json, netlify.toml
+- assets/ (logo, icons, local fonts + OFL notices)
+- engine/ (ffmpeg-core.js, ffmpeg-core.wasm.gz, GPL-2.0 notice)
+- vendor/ffmpeg/ (pinned ESM wrapper + MIT notice)
+
+NOT INCLUDED
+- _probe test harness and generated download samples
+- Android APK binary (Capacitor config is included; build separately if needed)

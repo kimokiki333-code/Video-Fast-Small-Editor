@@ -1,0 +1,24 @@
+Make it Fast Edit Arsenal — V3 LIGHT EDITION
+============================================
+Ready to run or deploy. All processing stays on-device.
+
+QUICK START
+1. Run: npm start      (then open http://localhost:4173)
+2. Online: upload the whole folder to any static HTTPS host.
+3. Website-only deploy ZIP: make-it-fast-edit-arsenal-website.zip (index.html at root).
+
+WHAT IS NEW IN V3
+- Split into up to 24 separate parts. Delete / restore any part, or delete before / after a cut.
+- Focus any part and edit it with all 7 modules; each part can keep independent edits.
+- Undo and redo buttons + Ctrl/Cmd+Z / Shift+Z / Y for every editing step.
+- Lightweight player: normal-resolution 2D canvas, 25 fps only while playing, one redraw on seek/edit/drag when paused.
+- Lightweight background: tiny 2D canvas, 8 drifting embers + one faint rotating wireframe ring, 20 fps at half resolution; stops during playback or when the tab is hidden.
+- No WebGL, no Three.js, no blur layers, no endless animations. Filmstrip loads later with only 8 thumbnails.
+- Save quality is capped at 720p HD, with 480p and 360p options. Smaller sources are never scaled up.
+- Shapes: Original, 16:9, 9:16, 1:1, 4:5, 4:3 or a custom ratio. 9:16 at 720p saves 720x1280.
+
+OFFLINE / PWA
+The service worker precaches the app shell and the gzipped local FFmpeg core, so the first render can work offline after install.
+
+ANDROID
+Capacitor config is included in the full project ZIP. Build the APK separately with: npm install, npm run cap:add:android, npm run cap:sync, npm run cap:open:android.

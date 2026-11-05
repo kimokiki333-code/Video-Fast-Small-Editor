@@ -1,0 +1,8 @@
+{
+  "appId": "com.arena.makeitfasteditarsenal",
+  "appName": "Make it Fast Edit Arsenal",
+  "webDir": ".",
+  "server": {
+    "androidScheme": "https"
+  }
+}

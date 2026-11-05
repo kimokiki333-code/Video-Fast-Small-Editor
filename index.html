@@ -1,0 +1,356 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#000000">
+  <meta name="description" content="Make it Fast Edit Arsenal — a lightweight local video workstation with delete-able split parts, undo/redo, a 2D ambient background and a hard 720p export cap.">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>Make it Fast Edit Arsenal</title>
+  <link rel="icon" href="./assets/logo.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="./assets/icons/apple-touch-icon.png">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="preload" href="./assets/fonts/Inter.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="./assets/fonts/SpaceGrotesk.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="./styles.css">
+  <link rel="stylesheet" href="./blackout.css">
+</head>
+<body class="blackout">
+  <canvas id="storm-bg" aria-hidden="true"></canvas>
+  <div class="blackout-grid" aria-hidden="true"></div>
+  <div class="scanlines" aria-hidden="true"></div>
+  <div class="blackout-vignette" aria-hidden="true"></div>
+
+  <!-- Crisp, hand-built SVG icon set -->
+  <svg class="svg-sprite" aria-hidden="true" width="0" height="0" focusable="false">
+    <symbol id="i-film" viewBox="0 0 24 24"><rect x="2.5" y="4" width="19" height="16" rx="2.5"/><path d="M7 4v16M17 4v16M2.5 9h4.5M2.5 15h4.5M17 9h4.5M17 15h4.5"/></symbol>
+    <symbol id="i-scissors" viewBox="0 0 24 24"><circle cx="6" cy="6" r="2.5"/><circle cx="6" cy="18" r="2.5"/><path d="M8.1 7.7 20 19M8.1 16.3 20 5M8 12h5"/></symbol>
+    <symbol id="i-crop" viewBox="0 0 24 24"><path d="M6 2v15.5A1.5 1.5 0 0 0 7.5 19H22M2 6h15.5A1.5 1.5 0 0 1 19 7.5V22"/></symbol>
+    <symbol id="i-type" viewBox="0 0 24 24"><path d="M4 6V4h16v2M12 4v16M9 20h6"/></symbol>
+    <symbol id="i-split" viewBox="0 0 24 24"><path d="M4 3v18M20 3v18M9 12h6M9 12l-2.5-2.5M9 12l-2.5 2.5M15 12l2.5-2.5M15 12l2.5 2.5"/></symbol>
+    <symbol id="i-audio" viewBox="0 0 24 24"><path d="M3 10v4M7 7v10M11 4v16M15 8v8M19 10v4"/></symbol>
+    <symbol id="i-sliders" viewBox="0 0 24 24"><path d="M4 7h9M17 7h3M4 17h3M11 17h9"/><circle cx="15" cy="7" r="2"/><circle cx="9" cy="17" r="2"/></symbol>
+    <symbol id="i-sparkles" viewBox="0 0 24 24"><path d="m12 3 1.5 4.5L18 9l-4.5 1.5L12 15l-1.5-4.5L6 9l4.5-1.5L12 3ZM19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8L19 15ZM5 15l.7 1.7L7.5 17l-1.8.6L5 19.5l-.7-1.9L2.5 17l1.8-.3L5 15Z"/></symbol>
+    <symbol id="i-upload" viewBox="0 0 24 24"><path d="M12 16V4m0 0L7.5 8.5M12 4l4.5 4.5M4 16v2.5A1.5 1.5 0 0 0 5.5 20h13a1.5 1.5 0 0 0 1.5-1.5V16"/></symbol>
+    <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 4v12m0 0 4.5-4.5M12 16l-4.5-4.5M4 18v.5A1.5 1.5 0 0 0 5.5 20h13a1.5 1.5 0 0 0 1.5-1.5V18"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5-11-6.5Z" fill="currentColor" stroke="none"/></symbol>
+    <symbol id="i-pause" viewBox="0 0 24 24"><path d="M8 5v14M16 5v14" stroke-width="3"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M9 7V4.5h6V7M6 7l1 13h10l1-13M10 11v6M14 11v6"/></symbol>
+    <symbol id="i-image" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2.5"/><circle cx="8.5" cy="9.5" r="1.5"/><path d="m4 17 5-5 4 4 2.5-2.5L20 18"/></symbol>
+    <symbol id="i-music" viewBox="0 0 24 24"><path d="M9 18V5l11-2v13"/><ellipse cx="6" cy="18" rx="3" ry="2.2"/><ellipse cx="17" cy="16" rx="3" ry="2.2"/></symbol>
+    <symbol id="i-video" viewBox="0 0 24 24"><rect x="2.5" y="5" width="14" height="14" rx="2.5"/><path d="m16.5 10 5-3v10l-5-3"/></symbol>
+    <symbol id="i-rotate" viewBox="0 0 24 24"><path d="M20 11a8 8 0 1 1-2.4-5.7M20 4v5h-5"/></symbol>
+    <symbol id="i-flip-h" viewBox="0 0 24 24"><path d="M12 3v18M9 7 4 12l5 5V7ZM15 7l5 5-5 5V7Z"/></symbol>
+    <symbol id="i-flip-v" viewBox="0 0 24 24"><path d="M3 12h18M7 9l5-5 5 5H7ZM7 15l5 5 5-5H7Z"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5h.01"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 4.5 4.5L19 7"/></symbol>
+    <symbol id="i-refresh" viewBox="0 0 24 24"><path d="M20 7v5h-5M4 17v-5h5"/><path d="M19 12a7 7 0 0 1-13.2 3.2M5 12a7 7 0 0 1 13.2-3.2"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></symbol>
+    <symbol id="i-marker" viewBox="0 0 24 24"><path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11Z"/><circle cx="12" cy="10" r="2.5"/></symbol>
+    <symbol id="i-zip" viewBox="0 0 24 24"><path d="M5 3h10l4 4v14H5zM15 3v5h4M11 3v3M10 8v3M13 11v3M10 14v3M13 17v3"/></symbol>
+    <symbol id="i-frame" viewBox="0 0 24 24"><path d="M4 8V4h4M16 4h4v4M20 16v4h-4M8 20H4v-4"/><rect x="7" y="7" width="10" height="10" rx="1.5"/></symbol>
+    <symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18M15 3v18M3 9h18M3 15h18"/></symbol>
+    <symbol id="i-camera" viewBox="0 0 24 24"><path d="M3 8h4l1.5-2.5h7L17 8h4v11H3z"/><circle cx="12" cy="13" r="3.5"/></symbol>
+    <symbol id="i-file-audio" viewBox="0 0 24 24"><path d="M6 2h8l5 5v15H6zM14 2v5h5"/><path d="M10 17V11l4 3-4 3Z"/></symbol>
+    <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></symbol>
+    <symbol id="i-wand" viewBox="0 0 24 24"><path d="m4 20 11-11M14 4l.7 1.8L16.5 6.5l-1.8.7L14 9l-.7-1.8-1.8-.7 1.8-.7L14 4ZM19.5 10l.5 1.2 1.2.5-1.2.5-.5 1.3-.5-1.3-1.2-.5 1.2-.5.5-1.2Z"/><path d="m14.5 8.5 1-1"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><rect x="4.5" y="10" width="15" height="11" rx="2.5"/><path d="M8 10V7a4 4 0 1 1 8 0v3M12 15v2"/></symbol>
+    <symbol id="i-help" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.6 2.6 0 1 1 4.2 2.1c-1 .8-1.7 1.2-1.7 2.4M12 17h.01"/></symbol>
+    <symbol id="i-chevron" viewBox="0 0 24 24"><path d="m9 5 7 7-7 7"/></symbol>
+    <symbol id="i-volume" viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9H4ZM17 9a4 4 0 0 1 0 6M19.5 6.5a7.5 7.5 0 0 1 0 11"/></symbol>
+    <symbol id="i-mute" viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9H4ZM17 9l5 6M22 9l-5 6"/></symbol>
+    <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12Z"/><circle cx="12" cy="12" r="2.8"/></symbol>
+    <symbol id="i-move" viewBox="0 0 24 24"><path d="M12 2v20M2 12h20M9 5l3-3 3 3M9 19l3 3 3-3M5 9l-3 3 3 3M19 9l3 3-3 3"/></symbol>
+    <symbol id="i-save" viewBox="0 0 24 24"><path d="M4 4h13l3 3v13H4zM7 4v6h9V4M7 20v-6h10v6"/></symbol>
+    <symbol id="i-rain" viewBox="0 0 24 24"><path d="M7 3 5 8M12 2l-2 7M17 3l-2 6M6 12l-2 7M11 11l-2 8M16 12l-2 6"/></symbol>
+    <symbol id="i-fire" viewBox="0 0 24 24"><path d="M12 22c4 0 7-3 7-7 0-4-3-6-4-10-1 3-3 4-4 6-1-2-1-4 0-6-4 3-6 6-6 10 0 4 3 7 7 7Z"/><path d="M12 22c2 0 3.5-1.5 3.5-3.5 0-2-1.5-3-2-5-1 1.5-2 2.5-2 4 0 1.5.5 2.5.5 4.5Z"/></symbol>
+    <symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 2 5 13h6l-1 9 8-12h-6l1-8Z"/></symbol>
+    <symbol id="i-undo" viewBox="0 0 24 24"><path d="M9 7 4 12l5 5M4 12h10a6 6 0 0 1 0 12h-3"/></symbol>
+    <symbol id="i-redo" viewBox="0 0 24 24"><path d="M15 7l5 5-5 5M20 12H10a6 6 0 0 0 0 12h3"/></symbol>
+  </svg>
+
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="brand" aria-label="Make it Fast Edit Arsenal">
+        <img class="brand-mark" src="./assets/logo.svg" alt="">
+        <span class="brand-copy">
+          <strong>Make it Fast <em>Edit Arsenal</em></strong>
+          <small>FAST EDIT ARSENAL · BLACK-OUT EDITION</small>
+        </span>
+        <span class="brand-version">V3</span>
+      </div>
+      <div class="top-actions">
+        <span class="storm-status" title="Tiny 2D canvas: embers + one wireframe ring, 20 fps, half resolution"><svg class="icon tiny"><use href="#i-bolt"/></svg> 2D LIGHT</span>
+        <span class="segment-focus-chip" id="segment-focus-chip">EDITING ALL PARTS</span>
+        <span class="engine-chip" id="engine-chip" title="All processing stays on this device"><span class="pulse-dot"></span><span>Local engine</span></span>
+        <button class="icon-btn" id="undo-btn" type="button" aria-label="Undo" disabled><svg class="icon"><use href="#i-undo"/></svg></button>
+        <button class="icon-btn" id="redo-btn" type="button" aria-label="Redo" disabled><svg class="icon"><use href="#i-redo"/></svg></button>
+        <span class="history-count" id="history-count">0↶ / 0↷</span>
+        <button class="icon-btn" id="help-btn" type="button" aria-label="Open quick guide"><svg class="icon"><use href="#i-help"/></svg></button>
+        <button class="btn btn-ghost hide-sm" id="open-top" type="button"><svg class="icon"><use href="#i-upload"/></svg><span>Open media</span></button>
+        <button class="btn btn-primary" id="export-top" type="button"><svg class="icon"><use href="#i-download"/></svg><span>Export MP4</span></button>
+      </div>
+    </header>
+
+    <section class="command-strip" aria-label="System status">
+      <div class="command-cell"><span>01</span><div><b><svg class="icon tiny"><use href="#i-rain"/></svg> 2D EMBERS / RING</b><small>20 fps · half resolution · stops on play</small></div></div>
+      <div class="command-cell"><span>02</span><div><b><svg class="icon tiny"><use href="#i-lock"/></svg> ZERO UPLINK</b><small>Media never leaves this device</small></div></div>
+      <div class="command-cell"><span>03</span><div><b><svg class="icon tiny"><use href="#i-grid"/></svg> 07 MODULES</b><small>Trim · crop · text · split · MP3→MP4 · enhance · lab</small></div></div>
+      <div class="command-cell"><span>04</span><div><b><svg class="icon tiny"><use href="#i-download"/></svg> 720P CAP</b><small>720 / 480 / 360 · no upscaling</small></div></div>
+    </section>
+    <div class="system-ticker" aria-hidden="true"><div class="ticker-track"><span>720P MAX</span><i>◆</i><span>UNDO / REDO</span><i>◆</i><span>DELETE PARTS</span><i>◆</i><span>EDIT EACH PART</span><i>◆</i><span>2D LIGHT BG</span><i>◆</i><span>25 FPS PREVIEW</span><i>◆</i><span>NO UPLOAD</span><i>◆</i></div></div>
+
+    <div class="workspace">
+      <nav class="tool-rail" aria-label="Studio tools">
+        <button class="tool-tab active" data-panel="trim" type="button"><svg class="icon"><use href="#i-scissors"/></svg><span><b>Trim</b><small>Range & timecodes</small></span></button>
+        <button class="tool-tab" data-panel="crop" type="button"><svg class="icon"><use href="#i-crop"/></svg><span><b>Crop</b><small>Freeform frame</small></span></button>
+        <button class="tool-tab" data-panel="text" type="button"><svg class="icon"><use href="#i-type"/></svg><span><b>Text</b><small>Layers on video</small></span></button>
+        <button class="tool-tab" data-panel="split" type="button"><svg class="icon"><use href="#i-split"/></svg><span><b>Split</b><small>Segments to ZIP</small></span></button>
+        <button class="tool-tab" data-panel="audio" type="button"><svg class="icon"><use href="#i-audio"/></svg><span><b>MP3 → MP4</b><small>Image + audio</small></span></button>
+        <button class="tool-tab" data-panel="effects" type="button"><svg class="icon"><use href="#i-sliders"/></svg><span><b>Enhance</b><small>Transform & mix</small></span></button>
+        <button class="tool-tab" data-panel="lab" type="button"><svg class="icon"><use href="#i-sparkles"/></svg><span><b>Extra tools</b><small>Snapshot · GIF · MP3</small></span></button>
+      </nav>
+
+      <main class="studio-main">
+        <section class="intro-row">
+          <div class="hero-copy">
+            <div class="eyebrow"><span></span> LIGHT EDITION / V3.0</div>
+            <h1>Make it fast.<span>Edit arsenal.</span></h1>
+            <p class="hero-sub">A lightweight local video workstation — split into separate parts, delete any part, edit each part with every module, undo/redo every step, and export at 720p max.</p>
+            <div class="storm-legend" aria-label="Light edition features">
+              <span><svg class="icon tiny"><use href="#i-trash"/></svg> DELETE PARTS</span>
+              <span><svg class="icon tiny"><use href="#i-undo"/></svg> UNDO / REDO</span>
+              <span><svg class="icon tiny"><use href="#i-download"/></svg> 720P MAX</span>
+              <span><svg class="icon tiny"><use href="#i-bolt"/></svg> 2D LIGHT</span>
+            </div>
+          </div>
+          <div class="intro-steps" aria-label="Workflow">
+            <span><i>01</i> Add media</span><svg class="icon tiny"><use href="#i-chevron"/></svg>
+            <span><i>02</i> Shape it</span><svg class="icon tiny"><use href="#i-chevron"/></svg>
+            <span><i>03</i> Fire export</span>
+          </div>
+        </section>
+
+        <section class="stage-card">
+          <div class="stage-head">
+            <div class="window-dots" aria-hidden="true"><i></i><i></i><i></i></div>
+            <div class="stage-title"><svg class="icon"><use href="#i-eye"/></svg><span>Signal monitor</span><b id="preview-badge">NO SIGNAL</b></div>
+            <div class="stage-head-actions">
+              <span class="resolution-pill" id="resolution-pill">—</span>
+              <button class="icon-btn" id="fit-btn" type="button" title="Refit preview" aria-label="Refit preview"><svg class="icon"><use href="#i-move"/></svg></button>
+              <button class="icon-btn" id="reset-view-btn" type="button" title="Reset preview zoom" aria-label="Reset preview"><svg class="icon"><use href="#i-refresh"/></svg></button>
+            </div>
+          </div>
+
+          <div class="stage" id="stage">
+            <div class="empty-state" id="empty-state">
+              <div class="drop-orbit" aria-hidden="true"><span></span><span></span><span></span></div>
+              <div class="empty-icon"><svg class="icon"><use href="#i-film"/></svg></div>
+              <h2>Drop media into the arsenal</h2>
+              <p>Video, MP3, or an image + audio pair. Black background, bright tools, zero uploads.</p>
+              <div class="empty-buttons">
+                <button class="btn btn-primary" id="empty-video-btn" type="button"><svg class="icon"><use href="#i-video"/></svg>Choose video</button>
+                <button class="btn btn-ghost" id="empty-audio-btn" type="button"><svg class="icon"><use href="#i-music"/></svg>MP3 + image</button>
+              </div>
+              <div class="drop-note"><svg class="icon tiny"><use href="#i-lock"/></svg> PRIVATE BY DESIGN · NO UPLINK · NO ACCOUNT</div>
+            </div>
+
+            <div class="media-frame" id="media-frame" hidden>
+              <video id="preview-video" playsinline preload="metadata"></video>
+              <img id="preview-image" alt="Cover art preview" draggable="false">
+              <canvas id="light-preview" class="light-preview" aria-hidden="true"></canvas>
+              <div class="overlay-layer" id="overlay-layer"></div>
+              <div class="crop-overlay" id="crop-overlay" hidden>
+                <div class="crop-shade"></div>
+                <div class="crop-box" id="crop-box">
+                  <div class="crop-grid" id="crop-grid"><i></i><i></i><i></i><i></i></div>
+                  <span class="crop-size" id="crop-size">—</span>
+                  <button class="crop-handle nw" data-handle="nw" aria-label="Resize crop top left"></button>
+                  <button class="crop-handle n" data-handle="n" aria-label="Resize crop top"></button>
+                  <button class="crop-handle ne" data-handle="ne" aria-label="Resize crop top right"></button>
+                  <button class="crop-handle e" data-handle="e" aria-label="Resize crop right"></button>
+                  <button class="crop-handle se" data-handle="se" aria-label="Resize crop bottom right"></button>
+                  <button class="crop-handle s" data-handle="s" aria-label="Resize crop bottom"></button>
+                  <button class="crop-handle sw" data-handle="sw" aria-label="Resize crop bottom left"></button>
+                  <button class="crop-handle w" data-handle="w" aria-label="Resize crop left"></button>
+                </div>
+              </div>
+              <div class="frame-corner tl"></div><div class="frame-corner tr"></div><div class="frame-corner bl"></div><div class="frame-corner br"></div>
+            </div>
+            <div class="stage-watermark" aria-hidden="true"><svg class="icon tiny"><use href="#i-lock"/></svg> ZERO UPLINK · LOCAL SIGNAL</div>
+          </div>
+
+          <div class="player-area" id="player-area">
+            <button class="play-btn" id="play-btn" type="button" aria-label="Play"><svg class="icon"><use href="#i-play"/></svg></button>
+            <div class="timeline-stack">
+              <div class="seek-row">
+                <span class="time-label" id="time-current">00:00.000</span>
+                <div class="seek-wrap">
+                  <input type="range" id="seek-bar" min="0" max="100" step="0.001" value="0" aria-label="Playback position">
+                  <div class="seek-progress" id="seek-progress"></div>
+                </div>
+                <span class="time-label" id="time-total">00:00.000</span>
+              </div>
+              <div class="trim-strip" id="trim-strip" aria-label="Trim range">
+                <div class="filmstrip" id="filmstrip"></div>
+                <div class="trim-shade left" id="trim-shade-left"></div>
+                <div class="trim-shade right" id="trim-shade-right"></div>
+                <div class="trim-selection" id="trim-selection"><span class="selection-grip"></span></div>
+                <div class="trim-handle start" id="trim-handle-start" role="slider" tabindex="0" aria-label="Trim start" aria-valuemin="0" aria-valuemax="100"><span></span></div>
+                <div class="trim-handle end" id="trim-handle-end" role="slider" tabindex="0" aria-label="Trim end" aria-valuemin="0" aria-valuemax="100"><span></span></div>
+                <div class="split-markers" id="split-markers"></div>
+                <div class="playhead" id="trim-playhead"></div>
+              </div>
+              <div class="strip-caption"><span><i class="legend-swatch"></i> TRIM WINDOW</span><span id="strip-duration">00:00.000 selected</span></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel-shell" id="panel-shell">
+          <div class="module-rail"><span>ARSENAL MODULES</span><b>07 / ONLINE</b></div>
+          <article class="tool-panel active" data-panel="trim">
+            <div class="panel-heading"><div><span class="panel-kicker">TOOL 01 / TIMELINE</span><h2>Trim with frame-level intent</h2><p>Drag the long amber range under the player, or type exact timecodes below.</p></div><span class="panel-icon"><svg class="icon"><use href="#i-scissors"/></svg></span></div>
+            <div class="digital-time-grid">
+              <label class="field time-field"><span>Start point</span><div><svg class="icon"><use href="#i-clock"/></svg><input id="trim-start-input" type="text" inputmode="decimal" value="00:00.000" spellcheck="false" aria-label="Trim start time"></div></label>
+              <label class="field time-field"><span>End point</span><div><svg class="icon"><use href="#i-clock"/></svg><input id="trim-end-input" type="text" inputmode="decimal" value="00:00.000" spellcheck="false" aria-label="Trim end time"></div></label>
+              <div class="set-buttons"><button class="btn btn-soft" id="set-start-btn" type="button">Set start at playhead</button><button class="btn btn-soft" id="set-end-btn" type="button">Set end at playhead</button></div>
+            </div>
+            <div class="metric-strip"><div><span>Selection</span><b id="trim-duration-readout">00:00.000</b></div><div><span>Output after speed</span><b id="trim-speed-readout">00:00.000</b></div><div><span>Frames @ 30 fps</span><b id="trim-frames-readout">0</b></div></div>
+            <div class="button-row"><button class="btn btn-ghost" id="trim-reset-btn" type="button"><svg class="icon"><use href="#i-refresh"/></svg> Full duration</button><button class="btn btn-ghost" id="trim-play-btn" type="button"><svg class="icon"><use href="#i-play"/></svg> Play selection</button><span class="inline-tip"><svg class="icon tiny"><use href="#i-info"/></svg> Tip: use arrow keys on a range handle for fine moves.</span></div>
+          </article>
+
+          <article class="tool-panel" data-panel="crop">
+            <div class="panel-heading"><div><span class="panel-kicker">TOOL 02 / FRAME</span><h2>Freeform crop — not just presets</h2><p>Drag on the preview to draw a crop, pull any of the eight handles, or enter source pixels.</p></div><span class="panel-icon"><svg class="icon"><use href="#i-crop"/></svg></span></div>
+            <div class="ratio-row" id="ratio-row">
+              <button class="chip active" data-ratio="free" type="button">Free</button>
+              <button class="chip" data-ratio="original" type="button">Original</button>
+              <button class="chip" data-ratio="1:1" type="button">1:1</button>
+              <button class="chip" data-ratio="4:5" type="button">4:5</button>
+              <button class="chip" data-ratio="9:16" type="button">9:16</button>
+              <button class="chip" data-ratio="16:9" type="button">16:9</button>
+            </div>
+            <div class="crop-numeric-grid">
+              <label class="field"><span>X position</span><input id="crop-x" type="number" min="0" step="2" value="0"></label>
+              <label class="field"><span>Y position</span><input id="crop-y" type="number" min="0" step="2" value="0"></label>
+              <label class="field"><span>Width</span><input id="crop-w" type="number" min="16" step="2" value="0"></label>
+              <label class="field"><span>Height</span><input id="crop-h" type="number" min="16" step="2" value="0"></label>
+            </div>
+            <div class="button-row"><button class="btn btn-ghost" id="crop-full-btn" type="button"><svg class="icon"><use href="#i-frame"/></svg> Full frame</button><button class="btn btn-ghost" id="crop-center-btn" type="button"><svg class="icon"><use href="#i-move"/></svg> Center current</button><button class="btn btn-ghost" id="crop-match-btn" type="button"><svg class="icon"><use href="#i-wand"/></svg> Match output ratio</button></div>
+            <label class="switch-line"><input id="crop-grid-toggle" type="checkbox" checked><span class="switch"></span><span>Show rule-of-thirds guides on the crop box</span></label>
+            <div class="note-card"><svg class="icon"><use href="#i-info"/></svg><span>Coordinates are in real source pixels and are automatically snapped to even H.264-friendly values.</span></div>
+          </article>
+
+          <article class="tool-panel" data-panel="text">
+            <div class="panel-heading"><div><span class="panel-kicker">TOOL 03 / OVERLAYS</span><h2>Text layers that land on the export</h2><p>Drag text directly on the preview. Set exact appearance and visible start/end times.</p></div><span class="panel-icon"><svg class="icon"><use href="#i-type"/></svg></span></div>
+            <div class="button-row text-presets"><button class="btn btn-primary" id="add-text-btn" type="button"><svg class="icon"><use href="#i-plus"/></svg> Add text</button><button class="btn btn-ghost" id="add-title-btn" type="button">Title preset</button><button class="btn btn-ghost" id="add-caption-btn" type="button">Caption preset</button><span class="inline-tip">Multiple layers supported</span></div>
+            <div class="text-layers" id="text-layers"></div>
+          </article>
+
+          <article class="tool-panel" data-panel="split">
+            <div class="panel-heading"><div><span class="panel-kicker">TOOL 04 / SPLITTER</span><h2>Split once, export every segment</h2><p>Place cut markers on the long range bar, then render a neat ZIP of MP4 parts — with your edits applied.</p></div><span class="panel-icon"><svg class="icon"><use href="#i-split"/></svg></span></div>
+            <div class="split-actions">
+              <button class="btn btn-primary" id="add-split-btn" type="button"><svg class="icon"><use href="#i-marker"/></svg> Add cut at playhead</button>
+              <label class="field compact"><span>Auto-cut every</span><div class="input-suffix"><input id="auto-split-seconds" type="number" min="1" step="0.5" value="5"><em>sec</em></div></label>
+              <button class="btn btn-ghost" id="auto-split-btn" type="button"><svg class="icon"><use href="#i-wand"/></svg> Generate cuts</button>
+              <button class="btn btn-ghost danger-text" id="clear-split-btn" type="button"><svg class="icon"><use href="#i-trash"/></svg> Clear</button>
+            </div>
+            <div class="segment-focus-bar"><div><span>Editing</span><b id="segment-focus-label">All parts</b></div><div class="segment-focus-buttons" id="segment-focus-buttons"></div><small>Every module stays available for the focused part. Removed parts are skipped in MP4 and ZIP exports.</small></div>
+            <div class="split-lists"><div><h3>Cut markers <span id="split-count">0</span></h3><div class="split-points" id="split-points"><p class="empty-mini">No cuts yet. Move the playhead, then add a marker.</p></div></div><div><h3>Kept parts <span id="segment-count">1</span></h3><div class="segment-preview" id="segment-preview"></div></div></div>
+            <div class="segment-list" id="segment-list"></div>
+            <div class="split-export"><div><b id="split-summary">1 kept part of 1</b><span id="split-scope">Delete any part, or edit one part with all modules</span></div><button class="btn btn-primary" id="split-export-btn" type="button"><svg class="icon"><use href="#i-zip"/></svg> Render & download ZIP</button></div>
+          </article>
+
+          <article class="tool-panel" data-panel="audio">
+            <div class="panel-heading"><div><span class="panel-kicker">TOOL 05 / AUDIO CANVAS</span><h2>Turn an MP3 into a real MP4</h2><p>Pair audio with artwork. No cover image? Generate a neon waveform cover from the sound itself.</p></div><span class="panel-icon"><svg class="icon"><use href="#i-audio"/></svg></span></div>
+            <div class="audio-mode-banner"><svg class="icon"><use href="#i-music"/></svg><div><b>Audio-to-video mode</b><span>Outputs H.264 video + AAC audio in an .mp4 container.</span></div><button class="btn btn-soft" id="activate-audio-mode" type="button">Use this mode</button></div>
+            <div class="audio-drop-grid">
+              <button class="media-drop" id="audio-drop" type="button"><span class="drop-icon"><svg class="icon"><use href="#i-file-audio"/></svg></span><b>Choose MP3 / audio</b><small id="audio-file-label">No audio selected</small></button>
+              <button class="media-drop" id="image-drop" type="button"><span class="drop-icon"><svg class="icon"><use href="#i-image"/></svg></span><b>Choose cover image</b><small id="image-file-label">No image selected</small></button>
+            </div>
+            <div class="waveform-card"><div class="waveform-head"><span><svg class="icon tiny"><use href="#i-audio"/></svg> Audio waveform</span><b id="audio-duration-label">00:00.000</b></div><canvas id="waveform-canvas" height="92"></canvas><button class="btn btn-ghost" id="generate-cover-btn" type="button"><svg class="icon"><use href="#i-wand"/></svg> Generate waveform cover</button></div>
+            <div class="note-card"><svg class="icon"><use href="#i-info"/></svg><span>The selected trim range controls the audio length. Crop, text, rotation, color and watermark all work here too.</span></div>
+          </article>
+
+          <article class="tool-panel" data-panel="effects">
+            <div class="panel-heading"><div><span class="panel-kicker">TOOL 06 / ENHANCE</span><h2>Practical controls, real output</h2><p>Every slider below is written into the rendered file — no decorative-only controls.</p></div><span class="panel-icon"><svg class="icon"><use href="#i-sliders"/></svg></span></div>
+            <div class="effects-grid">
+              <div class="effect-card"><h3><svg class="icon"><use href="#i-rotate"/></svg> Orientation</h3><div class="rotate-row" id="rotate-row"><button class="chip active" data-rotate="0">0°</button><button class="chip" data-rotate="90">90°</button><button class="chip" data-rotate="180">180°</button><button class="chip" data-rotate="270">270°</button></div><div class="toggle-row"><button class="toggle-btn" id="flip-h-btn" type="button"><svg class="icon"><use href="#i-flip-h"/></svg> Flip H</button><button class="toggle-btn" id="flip-v-btn" type="button"><svg class="icon"><use href="#i-flip-v"/></svg> Flip V</button></div></div>
+              <div class="effect-card"><h3><svg class="icon"><use href="#i-volume"/></svg> Motion & audio</h3><label class="range-field"><span>Speed <b id="speed-value">1.00×</b></span><input id="speed-range" type="range" min="0.5" max="2" step="0.05" value="1"></label><label class="range-field"><span>Volume <b id="volume-value">100%</b></span><input id="volume-range" type="range" min="0" max="200" step="1" value="100"></label><button class="toggle-btn wide" id="mute-btn" type="button"><svg class="icon"><use href="#i-volume"/></svg> Mute output</button></div>
+              <div class="effect-card span-2"><h3><svg class="icon"><use href="#i-wand"/></svg> Light & color</h3><div class="color-grid"><label class="range-field"><span>Brightness <b id="brightness-value">0.00</b></span><input id="brightness-range" type="range" min="-0.3" max="0.3" step="0.01" value="0"></label><label class="range-field"><span>Contrast <b id="contrast-value">1.00</b></span><input id="contrast-range" type="range" min="0.6" max="1.6" step="0.01" value="1"></label><label class="range-field"><span>Saturation <b id="saturation-value">1.00</b></span><input id="saturation-range" type="range" min="0" max="2" step="0.01" value="1"></label><label class="range-field"><span>Gamma <b id="gamma-value">1.00</b></span><input id="gamma-range" type="range" min="0.7" max="1.4" step="0.01" value="1"></label></div><button class="btn btn-ghost" id="color-reset-btn" type="button"><svg class="icon"><use href="#i-refresh"/></svg> Reset color</button></div>
+              <div class="effect-card span-2"><h3><svg class="icon"><use href="#i-image"/></svg> Logo / watermark</h3><div class="watermark-controls"><button class="btn btn-ghost" id="watermark-btn" type="button"><svg class="icon"><use href="#i-upload"/></svg> <span id="watermark-label">Choose PNG / JPG</span></button><button class="btn btn-ghost danger-text" id="watermark-remove-btn" type="button"><svg class="icon"><use href="#i-trash"/></svg> Remove</button><label class="range-field"><span>Scale <b id="watermark-scale-value">18%</b></span><input id="watermark-scale" type="range" min="5" max="45" step="1" value="18"></label><label class="range-field"><span>Opacity <b id="watermark-opacity-value">80%</b></span><input id="watermark-opacity" type="range" min="10" max="100" step="1" value="80"></label><div class="mini-position"><span>Position</span><label>X <input id="watermark-x" type="number" min="0" max="100" value="92"></label><label>Y <input id="watermark-y" type="number" min="0" max="100" value="88"></label></div></div></div>
+            </div>
+          </article>
+
+          <article class="tool-panel" data-panel="lab">
+            <div class="panel-heading"><div><span class="panel-kicker">BONUS / WORKING EXPORTS</span><h2>Extra tools that produce files</h2><p>One-click outputs from the current timeline. These are render actions, not just visual effects.</p></div><span class="panel-icon"><svg class="icon"><use href="#i-sparkles"/></svg></span></div>
+            <div class="lab-grid">
+              <button class="lab-card" id="snapshot-btn" type="button"><span class="lab-icon amber"><svg class="icon"><use href="#i-camera"/></svg></span><b>Snapshot</b><small>Export the current frame as a full-resolution PNG with edits.</small><em>PNG <svg class="icon tiny"><use href="#i-chevron"/></svg></em></button>
+              <button class="lab-card" id="extract-btn" type="button"><span class="lab-icon mint"><svg class="icon"><use href="#i-file-audio"/></svg></span><b>Extract audio</b><small>Save the selected range as an MP3 with speed and volume applied.</small><em>MP3 <svg class="icon tiny"><use href="#i-chevron"/></svg></em></button>
+              <button class="lab-card" id="gif-btn" type="button"><span class="lab-icon violet"><svg class="icon"><use href="#i-film"/></svg></span><b>Animated GIF</b><small>Make a lightweight 480px looping GIF from up to 6 seconds.</small><em>GIF <svg class="icon tiny"><use href="#i-chevron"/></svg></em></button>
+              <button class="lab-card" id="contact-btn" type="button"><span class="lab-icon blue"><svg class="icon"><use href="#i-grid"/></svg></span><b>Frame sheet</b><small>Create a 3×3 contact sheet from nine moments in the range.</small><em>PNG <svg class="icon tiny"><use href="#i-chevron"/></svg></em></button>
+            </div>
+            <div class="embedded-tools"><span><svg class="icon tiny"><use href="#i-check"/></svg> Rotate & flip</span><span><svg class="icon tiny"><use href="#i-check"/></svg> Color correction</span><span><svg class="icon tiny"><use href="#i-check"/></svg> Speed & volume</span><span><svg class="icon tiny"><use href="#i-check"/></svg> Watermark</span><span><svg class="icon tiny"><use href="#i-check"/></svg> Resolution & quality</span><span><svg class="icon tiny"><use href="#i-check"/></svg> Waveform cover</span></div>
+          </article>
+        </section>
+      </main>
+
+      <aside class="inspector">
+        <section class="inspector-card project-card">
+          <div class="card-head"><h2><svg class="icon"><use href="#i-film"/></svg> Project</h2><span class="mode-badge" id="mode-badge">VIDEO</span></div>
+          <div class="mode-switch" id="mode-switch"><button class="active" data-mode="video" type="button"><svg class="icon"><use href="#i-video"/></svg> Video</button><button data-mode="audio" type="button"><svg class="icon"><use href="#i-music"/></svg> MP3 + image</button></div>
+          <div class="file-list">
+            <button class="file-row" id="replace-video-btn" type="button"><span class="file-icon"><svg class="icon"><use href="#i-video"/></svg></span><span><b id="video-file-name">No video loaded</b><small id="video-file-meta">MP4 · MOV · WEBM</small></span><svg class="icon tiny"><use href="#i-chevron"/></svg></button>
+            <button class="file-row" id="replace-audio-btn" type="button"><span class="file-icon"><svg class="icon"><use href="#i-music"/></svg></span><span><b id="audio-file-name">No audio loaded</b><small id="audio-file-meta">MP3 · WAV · M4A</small></span><svg class="icon tiny"><use href="#i-chevron"/></svg></button>
+            <button class="file-row" id="replace-image-btn" type="button"><span class="file-icon"><svg class="icon"><use href="#i-image"/></svg></span><span><b id="image-file-name">No cover loaded</b><small id="image-file-meta">PNG · JPG · WEBP</small></span><svg class="icon tiny"><use href="#i-chevron"/></svg></button>
+          </div>
+          <button class="btn btn-soft full" id="reset-project-btn" type="button"><svg class="icon"><use href="#i-refresh"/></svg> Reset this project</button>
+        </section>
+
+        <section class="inspector-card output-card">
+          <div class="card-head"><h2><svg class="icon"><use href="#i-download"/></svg> Output</h2><span class="secure-mini"><svg class="icon tiny"><use href="#i-lock"/></svg> local</span></div>
+          <label class="field select-field"><span>Save quality · 720p max</span><select id="output-quality-tier"><option value="720" selected>720p HD · maximum</option><option value="480">480p</option><option value="360">360p</option></select></label>
+          <label class="field select-field"><span>Shape</span><select id="output-shape"><option value="original" selected>Original</option><option value="16:9">16:9</option><option value="9:16">9:16</option><option value="1:1">1:1</option><option value="4:5">4:5</option><option value="4:3">4:3</option><option value="custom">Custom ratio</option></select></label>
+          <div class="custom-ratio" id="custom-ratio" hidden><label class="field"><span>Ratio W</span><input id="ratio-w" type="number" min="1" max="99" step="1" value="16"></label><label class="field"><span>Ratio H</span><input id="ratio-h" type="number" min="1" max="99" step="1" value="9"></label></div>
+          <div class="output-size-readout" id="output-size-readout">1280×720 · 720p cap</div>
+          <input id="output-preset" type="hidden" value="shape">
+          <input id="output-width" type="hidden" value="1280">
+          <input id="output-height" type="hidden" value="720">
+          <div class="custom-size" id="custom-size" hidden></div>
+          <div class="output-two"><label class="field select-field"><span>Compression</span><select id="output-quality"><option value="20">High · CRF 20</option><option value="23" selected>Balanced · CRF 23</option><option value="28">Compact · CRF 28</option></select></label><label class="field select-field"><span>Frame rate</span><select id="output-fps"><option value="24">24 fps</option><option value="30" selected>30 fps</option><option value="60">60 fps</option></select></label></div>
+          <label class="field color-field"><span>Padding color</span><div><input id="output-bg" type="color" value="#000000"><code id="output-bg-code">#000000</code></div></label>
+          <button class="btn btn-primary full export-main" id="export-main-btn" type="button"><svg class="icon"><use href="#i-download"/></svg> Render MP4</button>
+          <div class="progress-block" id="progress-block" hidden><div class="progress-head"><span id="progress-label">Preparing engine…</span><b id="progress-value">0%</b></div><div class="progress-track"><div id="progress-bar"></div></div><button class="text-btn" id="cancel-export-btn" type="button">Cancel render</button></div>
+        </section>
+
+        <section class="inspector-card results-card">
+          <div class="card-head"><h2><svg class="icon"><use href="#i-save"/></svg> Results</h2><button class="text-btn" id="clear-results-btn" type="button">Clear</button></div>
+          <div class="results-list" id="results-list"><div class="results-empty"><svg class="icon"><use href="#i-download"/></svg><span>Rendered files will appear here with instant downloads.</span></div></div>
+        </section>
+
+        <section class="privacy-card"><svg class="icon"><use href="#i-lock"/></svg><div><b>BLACK-OUT PRIVACY</b><span>Your media is never uploaded. The 2D background stops during playback, the preview runs at 25 fps, and exports never exceed 720p.</span></div></section>
+      </aside>
+    </div>
+  </div>
+
+  <div class="toast-stack" id="toast-stack" aria-live="polite"></div>
+
+  <dialog id="help-dialog" class="help-dialog">
+    <form method="dialog"><button class="dialog-close" aria-label="Close guide"><svg class="icon"><use href="#i-close"/></svg></button></form>
+    <img class="dialog-logo" src="./assets/logo.svg" alt="">
+    <span class="panel-kicker">ARSENAL GUIDE</span><h2>Four moves. Full arsenal.</h2>
+    <div class="guide-grid"><div><i>1</i><b>Open media</b><span>Choose a video, or switch to MP3 + image and pick audio + artwork. Drag-and-drop works too.</span></div><div><i>2</i><b>Set the range</b><span>Use the long dual-handle bar beneath the seek bar, or type exact start and end timecodes.</span></div><div><i>3</i><b>Shape it</b><span>Draw a free crop, drag text and a watermark, then adjust rotation, color, speed and volume.</span></div><div><i>4</i><b>Export</b><span>Render MP4, split into a ZIP, or use the extra tools for PNG, MP3, GIF and a frame sheet.</span></div></div>
+    <p class="dialog-note"><svg class="icon tiny"><use href="#i-info"/></svg> Make it Fast Edit Arsenal now supports delete-able split parts, per-part editing, undo/redo for every step, a lightweight 2D background and a hard 720p save cap. Short clips render fastest on phones.</p>
+    <form method="dialog"><button class="btn btn-primary full">Got it</button></form>
+  </dialog>
+
+  <input id="file-video" type="file" accept="video/*" hidden>
+  <input id="file-audio" type="file" accept="audio/*" hidden>
+  <input id="file-image" type="file" accept="image/*" hidden>
+  <input id="file-watermark" type="file" accept="image/*" hidden>
+
+  <script type="module" src="./app.js"></script>
+</body>
+</html>

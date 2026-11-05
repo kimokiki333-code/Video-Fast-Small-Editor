@@ -1,0 +1,48 @@
+Make it Fast Edit Arsenal — V3 FILE MANIFEST
+Generated: 2026-11-05
+Files: 43
+Total bytes: 11828016
+
+e597df3ce36a728f1f6dc6ac54c06b6af9880b78765415cfd7a64246e88d3bf3         893  LICENSES.md
+44dbcd7144f40256267f516c7c2b63f4120116afd799f978eaa4402b2ed7370e        4886  README.md
+5a158eb1694a2ae1c542f864ea587d0b4479553a8db6244020486c30eff0f919        1565  START-HERE.txt
+42b5a790c6ad746ab349a0733dbb39813dcbe491d2b856bd2f81fdcd952735f8         504  _headers
+663af46a59572d6a2589fb3dbc59d47d6522d997017419bea030283983d9cf4f       97020  app.js
+3100e775e8616cd2611beecfa23a4263d7037586789b43f035236a2e6fbd4c62       48256  assets/fonts/Inter.woff2
+ce85091f020920b65762b387b194ef59457ea5b25b760f2dcc35240a94bb8669      165960  assets/fonts/NotoArabic.woff2
+5b9321a4298cfeb6b34354164a1c3afc3db114569984c502b9b35d988fd58c57        4377  assets/fonts/OFL-Inter.txt
+07fc70bfeb985cc1a87a8587d0a0c80bab11c86c9dc3fd95b6f0cb332f983e96        4382  assets/fonts/OFL-NotoSansArabic.txt
+564ce565c371c5e5bbf286006565a7c9aa55a9f56e7ca58d56e05d649dd61a72        4495  assets/fonts/OFL-SpaceGrotesk.txt
+0640890476fc1198ab4de571fb658de443c4d85b66466ec09534a8737ab1ce9d       22288  assets/fonts/SpaceGrotesk.woff2
+b1a3df20c0e000df02fcd53a757ef371fab451cb06e0d1d5de3ae0c31a486b49      334056  assets/icons/apple-touch-icon.png
+34d124e084ea514685768f1bc6c04e2dae21167205d2e61cccf9fd718951a45e       60351  assets/icons/icon-192.png
+b1a3df20c0e000df02fcd53a757ef371fab451cb06e0d1d5de3ae0c31a486b49      334056  assets/icons/icon-512.png
+257cf8a64b0bada72107c7a25306b607889472f2b422117f0d7d167f1e7326af      190963  assets/icons/icon-maskable-512.png
+2380e2fbe8092a6fd4cfde7fb44e41bb3fbf95c83d04adcb2e0a86393c0f7c46        4110  assets/logo.svg
+bb4c65ba0052870a44a1a28156bffa02b38e15d8c669d0a28ac979bc203458f6        4265  background.js
+7130bc51c3a7c51292e669ac9002749d8bcd3ee142c806fedf82066cc3efa4c6       37764  blackout.css
+e8f841744d68fb31793ea16ce64e70cc4bc714f5f517883460fab84eb577cb80         156  capacitor.config.json
+edaef632cbb643e4e7a221717a6c441a4c1a7c918e6e4d56debc3d8739b233f6       17984  engine/FFMPEG-CORE-GPL-2.0.txt
+67a48f11645f85439f3fde4f2119042c16b374b910206b7a7a24f342e28dcae3      111804  engine/ffmpeg-core.js
+f0a8842be3543d22815de4706eed9f5b46e5a61ab53d3338b552a8846946cd89    10220341  engine/ffmpeg-core.wasm.gz
+da8753d544710ad9d937df5a4a2b844beef0419c9c312004dd89f3411a17f08c        5881  engine.js
+524c88377da11147b731ed0702c7ef6b347b365231fd60aace5e3d184dd42310       10934  ffmpeg-plan.js
+b7c30f39b0f4e41c9d50e7deea1693d096448df6f00a5efb0bced04f0efa8b2a       40978  index.html
+8a312dd2a0737bac7dac0fb580566d56552c37f656e80c96bca651fd39d45a8c        1479  manifest.webmanifest
+ddfb2d0c81cd4a993147f2fb1b47e77bb69b7847e103fdf41942c8636304e1f1       13759  media-utils.js
+28f6d7f0cd25e1e9d8d7ca03e96bfea5f1405bd4455d21bc52a67cd8a5983e1b         528  netlify.toml
+062f3dc241d9b7b39da6920b0ac5575d90c3b60cb5d7eb350764beb35897fef5         538  package.json
+155c7ae6f277ca622ef8fcdfee7507ae675d77f14f59a0032fd956846f96ec4a        4762  player.js
+9dcea0fea21e954a13b58307f73106193994bfac6b19aab8399464f27ab98476        2484  server.mjs
+8850ff2f64b05b57e1e931c8c38285ad7d68f85c85c327bfcf91b7022a8c8d70       52348  styles.css
+83c7b9e8688dc9a911b5844535fcce8d774236333ac9177b5d65aaab47e18422        2379  sw.js
+436ffbe547c76d97621721c8631974f64747faea457f249bd4124641c4a481ba        1076  vendor/ffmpeg/LICENSE-MIT.txt
+7a829c898bdbc3a8806652a5502d9101178ce4e988a2c50b3abc1306ce4fc919        9747  vendor/ffmpeg/classes.js
+d540081a3bd236a8c9d28fbde25b13d614ce0b68a92bc6fb62ede0a5d0366389        1002  vendor/ffmpeg/const.js
+619310d7ef5fe5fefa0a31927db862b7c291713cfef4d71753fa8aafd18f4db6         332  vendor/ffmpeg/errors.js
+cad19572420f7ead17272082d9582ebaed7f2856e19875542f83daf8d25d3b5d          58  vendor/ffmpeg/index.js
+72f80e6fd44fcd18b55c9a0deb3bc70b9bb37480cf969045ca4521f5a11300f5         295  vendor/ffmpeg/types.js
+8c2e0e16445f8d3a0acbb812f2c60541a92c88ed0bf9ffe96c52e7fb6c8b1d72         138  vendor/ffmpeg/utils.js
+feff0ac937ea225e997e1fae997a74f8b8d572423a526da59eb56624b1f3cde7        5085  vendor/ffmpeg/worker.js
+4d6634d8d84e46b56135cbbf386b9e6bb2f2519943118816d6e75e85d1c14c9f         784  vercel.json
+7401c2b78a1cd1ed6cfd0d6eaa0acea5c2be43473886dcc60c1593370e18658d        2953  zip.js

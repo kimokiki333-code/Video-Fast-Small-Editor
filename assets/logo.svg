@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">Make it Fast Edit Arsenal</title>
+  <desc id="desc">A black film aperture crossed by a neon lightning bolt, with rain, embers and an audio waveform.</desc>
+  <defs>
+    <linearGradient id="black" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#05080a"/><stop offset=".55" stop-color="#000000"/><stop offset="1" stop-color="#070b0e"/>
+    </linearGradient>
+    <linearGradient id="neon" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#00e5ff"/><stop offset=".5" stop-color="#b6ff3c"/><stop offset="1" stop-color="#ff3d8b"/>
+    </linearGradient>
+    <linearGradient id="bolt" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#e9ffff"/><stop offset=".45" stop-color="#00e5ff"/><stop offset="1" stop-color="#b6ff3c"/>
+    </linearGradient>
+    <radialGradient id="pulse" cx="50%" cy="46%" r="50%">
+      <stop offset="0" stop-color="#00e5ff" stop-opacity=".34"/><stop offset=".55" stop-color="#ff3d8b" stop-opacity=".08"/><stop offset="1" stop-color="#000" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="glow" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur stdDeviation="10" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="grain" x="-10%" y="-10%" width="120%" height="120%">
+      <feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="8"/><feColorMatrix type="saturate" values="0"/><feComponentTransfer><feFuncA type="table" tableValues="0 .10"/></feComponentTransfer>
+    </filter>
+    <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
+      <path d="M32 0H0V32" fill="none" stroke="#00e5ff" stroke-width="1" opacity=".10"/>
+    </pattern>
+    <clipPath id="round"><rect x="14" y="14" width="484" height="484" rx="104"/></clipPath>
+  </defs>
+  <rect width="512" height="512" rx="116" fill="#000"/>
+  <g clip-path="url(#round)">
+    <rect x="14" y="14" width="484" height="484" fill="url(#black)"/>
+    <rect x="14" y="14" width="484" height="484" fill="url(#grid)"/>
+    <rect x="14" y="14" width="484" height="484" filter="url(#grain)" opacity=".5"/>
+    <ellipse cx="256" cy="226" rx="225" ry="205" fill="url(#pulse)"/>
+    <g opacity=".55" stroke="#00e5ff" stroke-width="3" stroke-linecap="round">
+      <path d="M48 60 122 -14M92 42 196 -62M346 -30 480 104M400 20 520 140M20 338 150 468M340 430 470 560"/>
+    </g>
+    <g opacity=".7" stroke="#ff3d8b" stroke-width="2" stroke-linecap="round">
+      <path d="M22 100 86 36M390 0 470 80M36 390 116 470"/>
+    </g>
+    <g filter="url(#glow)">
+      <circle cx="256" cy="224" r="138" fill="none" stroke="url(#neon)" stroke-width="16" stroke-linecap="round" stroke-dasharray="118 34" transform="rotate(-18 256 224)"/>
+      <circle cx="256" cy="224" r="104" fill="none" stroke="#00e5ff" stroke-width="2" opacity=".55"/>
+      <path d="M278 104 194 236h54l-26 132 104-154h-58l30-110Z" fill="url(#bolt)" stroke="#eaffff" stroke-width="3" stroke-linejoin="round"/>
+    </g>
+    <g fill="#b6ff3c" opacity=".95">
+      <circle cx="92" cy="224" r="5"/><circle cx="420" cy="224" r="5"/>
+      <circle cx="256" cy="66" r="5"/><circle cx="256" cy="382" r="5"/>
+    </g>
+    <g fill="#ff3d8b" opacity=".85">
+      <circle cx="116" cy="348" r="4"/><circle cx="398" cy="116" r="4"/><circle cx="372" cy="354" r="3"/>
+    </g>
+    <path d="M108 422c18 0 18-26 36-26s18 48 36 48 18-64 36-64 18 82 36 82 18-58 36-58 18 38 36 38 18-24 36-24" fill="none" stroke="url(#neon)" stroke-width="8" stroke-linecap="round"/>
+    <path d="M108 422c18 0 18-26 36-26s18 48 36 48 18-64 36-64 18 82 36 82 18-58 36-58 18 38 36 38 18-24 36-24" fill="none" stroke="#00e5ff" stroke-width="2" stroke-linecap="round" opacity=".75"/>
+  </g>
+  <rect x="14" y="14" width="484" height="484" rx="104" fill="none" stroke="url(#neon)" stroke-width="3" opacity=".82"/>
+  <rect x="27" y="27" width="458" height="458" rx="92" fill="none" stroke="#ffffff" stroke-width="1" opacity=".08"/>
+</svg>
